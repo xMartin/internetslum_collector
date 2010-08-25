@@ -1,5 +1,7 @@
 var http = require('http')
 var url = require('url')
+var fs = require('fs')
+var mustache = require('mustache')
 var mongo = require('mongodb')
 
 var port = process.argv[2] || 8080
@@ -30,14 +32,12 @@ db.open(function() {
     	}
 
       function display_list(url, req, res) {
-        var result = 'result:'
       	res.writeHead(200, {'Content-Type': 'text/html'})
       	collection.find({}, function(err, cursor) {
-          cursor.toArray(function(err, items) {
-            items.forEach(function(item) {
-              result = result + ' ' + item.url
+          cursor.fetchAllRecords(function(err, items) {
+            fs.readFile('./templates/list.html', 'utf8', function(err, template) {
+              res.end(mustache.to_html(template, { list: items }))
             })
-            res.end(result)
           })
         })
     	}

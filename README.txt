@@ -7,6 +7,9 @@ curl http://npmjs.org/install.sh | sudo sh
 # install node.js module for MongoDB
 sudo npm install mongodb
 
+# install node.js module for Mustache
+sudo npm install mustache
+
 # setup and start database
 mkdir /Users/martin/node.js/mongodb/internetslum_collector
 /opt/local/bin/mongod --dbpath=/Users/martin/node.js/mongodb/internetslum_collector
