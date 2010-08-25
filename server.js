@@ -17,33 +17,33 @@ new mongo.Db('test', new mongo.Server('127.0.0.1', 27017, {}), {}).open(function
 
       switch(url_parts.pathname) {
         case '/':
-      	  display_root()
-      	  break
+          display_root()
+          break
         case '/list':
-      	  display_list()
-      	  break
+          display_list()
+          break
         case '/add':
-      	  display_add()
-      	  break
+          display_add()
+          break
         default:
-      	  display_404()
+          display_404()
       }
 
       function display_root() {
-      	res.writeHead(200, {'Content-Type': 'text/html'})
-      	res.end('root')
-    	}
+        res.writeHead(200, {'Content-Type': 'text/html'})
+        res.end('root')
+      }
 
       function display_list() {
-      	res.writeHead(200, {'Content-Type': 'text/html'})
-      	collection.find({}, function(err, cursor) {
+        res.writeHead(200, {'Content-Type': 'text/html'})
+        collection.find({}, function(err, cursor) {
           cursor.fetchAllRecords(function(err, items) {
             fs.readFile('./templates/list.html', 'utf8', function(err, template) {
               res.end(mustache.to_html(template, { list: items }))
             })
           })
         })
-    	}
+      }
 
       function display_add() {
         res.writeHead(200, {'Content-Type': 'text/html'})
@@ -51,16 +51,16 @@ new mongo.Db('test', new mongo.Server('127.0.0.1', 27017, {}), {}).open(function
         if (params.url) {
           var doc = { url: params.url }
           collection.insert(doc, function() {
-        	  res.end('url added to the internet slum')
-        	  return
-        	})
+            res.end('url added to the internet slum')
+            return
+          })
         }
-      	res.end('invalid')
+        res.end('invalid')
       }
 
       function display_404() {
-      	res.writeHead(404, {'Content-Type': 'text/html'})
-      	res.end('not found')
+        res.writeHead(404, {'Content-Type': 'text/html'})
+        res.end('not found')
       }
     }).listen(port, ip)
   })
