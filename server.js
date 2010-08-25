@@ -1,5 +1,6 @@
 var http = require('http')
 var url = require('url')
+var querystring = require('querystring')
 var fs = require('fs')
 var mustache = require('mustache')
 var mongo = require('mongodb')
@@ -16,21 +17,24 @@ new mongo.Db('test', new mongo.Server('127.0.0.1', 27017, {}), {}).open(function
 
       switch(url_parts.pathname) {
         case '/':
-      	  display_root(url_parts.pathname, req, res)
+      	  display_root()
       	  break
         case '/list':
-      	  display_list(url_parts.pathname, req, res)
+      	  display_list()
+      	  break
+        case '/add':
+      	  display_add()
       	  break
         default:
-      	  display_404(url_parts.pathname, req, res)
+      	  display_404()
       }
 
-      function display_root(url, req, res) {
+      function display_root() {
       	res.writeHead(200, {'Content-Type': 'text/html'})
       	res.end('root')
     	}
 
-      function display_list(url, req, res) {
+      function display_list() {
       	res.writeHead(200, {'Content-Type': 'text/html'})
       	collection.find({}, function(err, cursor) {
           cursor.fetchAllRecords(function(err, items) {
@@ -41,7 +45,20 @@ new mongo.Db('test', new mongo.Server('127.0.0.1', 27017, {}), {}).open(function
         })
     	}
 
-      function display_404(url, req, res) {
+      function display_add() {
+        res.writeHead(200, {'Content-Type': 'text/html'})
+        var params = querystring.parse(url_parts.query)
+        if (params.url) {
+          var doc = { url: params.url }
+          collection.insert(doc, function() {
+        	  res.end('url added to the internet slum')
+        	  return
+        	})
+        }
+      	res.end('invalid')
+      }
+
+      function display_404() {
       	res.writeHead(404, {'Content-Type': 'text/html'})
       	res.end('not found')
       }
