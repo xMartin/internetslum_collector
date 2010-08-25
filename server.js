@@ -52,10 +52,13 @@ new mongo.Db('test', new mongo.Server('127.0.0.1', 27017, {}), {}).open(function
           var doc = { url: params.url }
           collection.insert(doc, function() {
             res.end('url added to the internet slum')
-            return
           })
         }
-        res.end('invalid')
+        else {
+          fs.readFile('./templates/add.html', 'utf8', function(err, template) {
+            res.end(mustache.to_html(template, {formAction: '', formMethod: 'GET', urlInputName: 'url'}))
+          })
+        }
       }
 
       function display_404() {
