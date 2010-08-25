@@ -4,7 +4,7 @@ var url = require('url')
 var port = process.argv[2] || 8080
 var ip = '127.0.0.1'
 
-http.createServer(function (req, res) {
+http.createServer(function(req, res) {
   var url_parts = url.parse(req.url)
 
   switch(url_parts.pathname) {
