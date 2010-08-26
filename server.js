@@ -6,7 +6,7 @@ var mustache = require('mustache')
 var mongo = require('mongodb')
 
 var port = process.argv[2] || 8080
-var ip = '127.0.0.1'
+var ip = '0.0.0.0'
 
 console.log('Starting server...')
 
