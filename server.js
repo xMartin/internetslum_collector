@@ -10,7 +10,7 @@ var ip = '127.0.0.1'
 
 console.log('Starting server...')
 
-new mongo.Db('test', new mongo.Server('127.0.0.1', 27017, {}), {}).open(function(err, db) {
+new mongo.Db('internetslum_collector', new mongo.Server('127.0.0.1', 27017, {}), {}).open(function(err, db) {
   db.collection('urls', function(err, collection) {
     http.createServer(function(req, res) {
       var url_parts = url.parse(req.url)

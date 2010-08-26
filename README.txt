@@ -15,7 +15,7 @@ mkdir /Users/martin/node.js/mongodb/internetslum_collector
 /opt/local/bin/mongod --dbpath=/Users/martin/node.js/mongodb/internetslum_collector
 
 # fill database
-mongo
+mongo internetslum_collector
 > db.urls.save({url: 'http://www.mongodb.org/display/DOCS/Quickstart+OS+X'})
 > db.urls.save({url: 'http://www.slideshare.net/ggoodale/getting-started-with-mongodb-and-nodejs'})
 
