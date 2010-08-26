@@ -34,7 +34,12 @@ new mongo.Db('internetslum_collector', new mongo.Server('127.0.0.1', 27017, {}),
           display_add()
           break
         default:
-          display_404()
+          if (url_parts.pathname.indexOf(/files/) == 0) {
+            display_file(url_parts.pathname.substr(7))
+          }
+          else {
+            display_404()
+          }
       }
 
       function display_root() {
@@ -75,6 +80,17 @@ new mongo.Db('internetslum_collector', new mongo.Server('127.0.0.1', 27017, {}),
             res.end(mustache.to_html(template, templateTags, partials))
           })
         }
+      }
+
+      function display_file(path) {
+        res.writeHead(200)
+        fs.readFile('./files/' + path, function(err, file) {
+          if (err) {
+            display_404()
+            return
+          }
+          res.end(file)
+        })
       }
 
       function display_404() {
