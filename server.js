@@ -10,6 +10,14 @@ var ip = '0.0.0.0'
 
 console.log('Starting server...')
 
+var partials = {}
+new Array('header', 'footer').forEach(function(name) {
+  // FIXME As reading of the files works asynchonously the first request may be received before the partial templates are loaded.
+  fs.readFile('./templates/' + name + '.html', 'utf8', function(err, template) {
+    partials[name] = template
+  })
+})
+
 new mongo.Db('internetslum_collector', new mongo.Server('127.0.0.1', 27017, {}), {}).open(function(err, db) {
   db.collection('urls', function(err, collection) {
     http.createServer(function(req, res) {
@@ -31,7 +39,9 @@ new mongo.Db('internetslum_collector', new mongo.Server('127.0.0.1', 27017, {}),
 
       function display_root() {
         res.writeHead(200, {'Content-Type': 'text/html'})
-        res.end('root')
+        fs.readFile('./templates/index.html', 'utf8', function(err, template) {
+          res.end(mustache.to_html(template, {}, partials))
+        })
       }
 
       function display_list() {
@@ -39,7 +49,7 @@ new mongo.Db('internetslum_collector', new mongo.Server('127.0.0.1', 27017, {}),
         collection.find({}, function(err, cursor) {
           cursor.fetchAllRecords(function(err, items) {
             fs.readFile('./templates/list.html', 'utf8', function(err, template) {
-              res.end(mustache.to_html(template, { list: items }))
+              res.end(mustache.to_html(template, { list: items }, partials))
             })
           })
         })
@@ -47,16 +57,22 @@ new mongo.Db('internetslum_collector', new mongo.Server('127.0.0.1', 27017, {}),
 
       function display_add() {
         res.writeHead(200, {'Content-Type': 'text/html'})
+        var templateTags = {formAction: '', formMethod: 'GET', urlInputName: 'url'}
         var params = querystring.parse(url_parts.query)
         if (params.url) {
           var doc = { url: params.url }
           collection.insert(doc, function() {
-            res.end('url added to the internet slum')
+            render('url added to the internet slum')
           })
         }
         else {
+          render()
+        }
+
+        function render(message) {
+          templateTags.message = message || ''
           fs.readFile('./templates/add.html', 'utf8', function(err, template) {
-            res.end(mustache.to_html(template, {formAction: '', formMethod: 'GET', urlInputName: 'url'}))
+            res.end(mustache.to_html(template, templateTags, partials))
           })
         }
       }

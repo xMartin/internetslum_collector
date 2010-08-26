@@ -1,4 +1,14 @@
+{{>header}}
+
+<h2>Add something to the slum</h2>
+
+{{#message}}
+<p class="message">{{message}}</p>
+{{/message}}
+
 <form action="{{formAction}}" method="{{formMethod}}">
   <input name="{{urlInputName}}">
   <input type="submit">
 </form>
+
+{{>footer}}
