@@ -3,7 +3,7 @@ var url = require('url')
 var querystring = require('querystring')
 var fs = require('fs')
 var mustache = require('mustache')
-var mongo = require('mongodb')
+var mongodb = require('mongodb')
 
 var port = process.argv[2] || 8080
 
@@ -17,7 +17,7 @@ new Array('header', 'footer').forEach(function(name) {
   })
 })
 
-new mongo.Db('internetslum_collector', new mongo.Server('127.0.0.1', 27017, {}), {}).open(function(err, db) {
+new mongodb.Db('internetslum_collector', new mongodb.Server('localhost', 27017, {}), {}).open(function(err, db) {
   db.collection('urls', function(err, collection) {
     http.createServer(function(req, res) {
       var url_parts = url.parse(req.url)
