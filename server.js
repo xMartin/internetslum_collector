@@ -6,7 +6,6 @@ var mustache = require('mustache')
 var mongo = require('mongodb')
 
 var port = process.argv[2] || 8080
-var ip = '0.0.0.0'
 
 console.log('Starting server...')
 
@@ -97,8 +96,8 @@ new mongo.Db('internetslum_collector', new mongo.Server('127.0.0.1', 27017, {}),
         res.writeHead(404, {'Content-Type': 'text/html'})
         res.end('not found')
       }
-    }).listen(port, ip)
+    }).listen(port)
   })
 })
 
-console.log('Server running at http://' + ip + ':' + port + '/')
+console.log('Server running on port ' + port)
