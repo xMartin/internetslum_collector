@@ -11,10 +11,7 @@ console.log('Starting server...')
 
 var partials = {}
 new Array('header', 'footer').forEach(function(name) {
-  // FIXME As reading of the files works asynchonously the first request may be received before the partial templates are loaded.
-  fs.readFile('./templates/' + name + '.html', 'utf8', function(err, template) {
-    partials[name] = template
-  })
+  partials[name] = fs.readFileSync('./templates/' + name + '.html', 'utf8')
 })
 
 new mongodb.Db('internetslum_collector', new mongodb.Server('localhost', 27017, {}), {}).open(function(err, db) {
