@@ -50,6 +50,11 @@ new mongodb.Db('internetslum_collector', new mongodb.Server('localhost', 27017, 
         collection.find({}, function(err, cursor) {
           cursor.fetchAllRecords(function(err, items) {
             fs.readFile('./templates/list.html', 'utf8', function(err, template) {
+              items.forEach(function(item) {
+                item.formattedDate =
+                  item.date.getDate() + '.' + item.date.getMonth() + '.' + item.date.getFullYear() + ', '
+                  + item.date.getHours() + ':' + item.date.getMinutes()
+              })
               res.end(mustache.to_html(template, { list: items }, partials))
             })
           })
@@ -58,10 +63,17 @@ new mongodb.Db('internetslum_collector', new mongodb.Server('localhost', 27017, 
 
       function display_add() {
         res.writeHead(200, {'Content-Type': 'text/html'})
-        var templateTags = {formAction: '', formMethod: 'GET', urlInputName: 'url'}
+        var templateTags = {
+          formAction: '',
+          formMethod: 'GET',
+          userNameInputLabel: 'User name:',
+          userNameInputName: 'username',
+          urlInputLabel: 'URL:',
+          urlInputName: 'url'
+        }
         var params = querystring.parse(url_parts.query)
         if (params.url) {
-          var doc = { url: params.url }
+          var doc = { username: params.username, url: params.url, date: new Date() }
           collection.insert(doc, function() {
             render('url added to the internet slum')
           })
