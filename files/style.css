@@ -42,3 +42,9 @@ nav ul li:last-child {
 #content {
   padding: 1em;
 }
+
+.message {
+  padding: .5em;
+  border: 1px solid #a61;
+  background: #d83;
+}
