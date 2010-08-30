@@ -11,7 +11,7 @@ var port = process.argv[2] || 8080
 console.log('Starting server...')
 
 var partials = {}
-new Array('header', 'footer').forEach(function(name) {
+;['header', 'footer'].forEach(function(name) {
   partials[name] = fs.readFileSync('./templates/' + name + '.html', 'utf8')
 })
 
