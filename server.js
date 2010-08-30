@@ -139,7 +139,7 @@ function checkUrl(url, callback) {
   var request = client.request('GET', urlParts.path, {'host': urlParts.host})
   request.end()
   request.on('response', function (response) {
-    var err = !(response.statusCode in {'200': 200, '302': 302, '303': 303})
+    var err = !(response.statusCode in {'200': 200, '301': 301, '302': 302, '303': 303, '304': 304, '307': 307})
     callback(err, checkedUrl)
   })
 }
