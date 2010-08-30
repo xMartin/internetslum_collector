@@ -10,10 +10,18 @@ var port = process.argv[2] || 8080
 
 console.log('Starting server...')
 
+// load partial templates
 var partials = {}
 ;['header', 'footer'].forEach(function(name) {
   partials[name] = fs.readFileSync('./templates/' + name + '.html', 'utf8')
 })
+// load templates
+var templates = {}
+;['index', 'list', 'add'].forEach(function(name) {
+  templates[name] = fs.readFileSync('./templates/' + name + '.html', 'utf8')
+})
+// load stylesheet
+var stylesheet = fs.readFileSync('./style.css', 'utf8')
 
 new mongodb.Db('internetslum_collector', new mongodb.Server('localhost', 27017, {}), {}).open(function(err, db) {
   db.collection('urls', function(err, collection) {
@@ -30,6 +38,10 @@ new mongodb.Db('internetslum_collector', new mongodb.Server('localhost', 27017, 
         case '/add':
           display_add()
           break
+        case '/style.css':
+          res.writeHead(200, {'Content-Type': 'text/css'})
+          res.end(stylesheet)
+          break
         default:
           if (url_parts.pathname.indexOf(/files/) == 0) {
             display_file(url_parts.pathname.substr(7))
@@ -41,23 +53,19 @@ new mongodb.Db('internetslum_collector', new mongodb.Server('localhost', 27017, 
 
       function display_root() {
         res.writeHead(200, {'Content-Type': 'text/html'})
-        fs.readFile('./templates/index.html', 'utf8', function(err, template) {
-          res.end(mustache.to_html(template, {}, partials))
-        })
+        res.end(mustache.to_html(templates['index'], {}, partials))
       }
 
       function display_list() {
         res.writeHead(200, {'Content-Type': 'text/html'})
         collection.find({}, function(err, cursor) {
           cursor.fetchAllRecords(function(err, items) {
-            fs.readFile('./templates/list.html', 'utf8', function(err, template) {
-              items.forEach(function(item) {
-                item.formattedDate =
-                  item.date.getDate() + '.' + item.date.getMonth() + '.' + item.date.getFullYear() + ', '
-                  + item.date.getHours() + ':' + item.date.getMinutes()
-              })
-              res.end(mustache.to_html(template, { list: items }, partials))
+            items.forEach(function(item) {
+              item.formattedDate =
+                item.date.getDate() + '.' + item.date.getMonth() + '.' + item.date.getFullYear() + ', '
+                + item.date.getHours() + ':' + item.date.getMinutes()
             })
+            res.end(mustache.to_html(templates['list'], { list: items }, partials))
           })
         })
       }
@@ -93,9 +101,7 @@ new mongodb.Db('internetslum_collector', new mongodb.Server('localhost', 27017, 
 
         function render(message) {
           templateTags.message = message || ''
-          fs.readFile('./templates/add.html', 'utf8', function(err, template) {
-            res.end(mustache.to_html(template, templateTags, partials))
-          })
+          res.end(mustache.to_html(templates['add'], templateTags, partials))
         }
       }
 
