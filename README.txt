@@ -16,8 +16,8 @@ mkdir /Users/martin/node.js/mongodb/internetslum_collector
 
 # fill database
 mongo internetslum_collector
-> db.urls.save({url: 'http://www.mongodb.org/display/DOCS/Quickstart+OS+X'})
-> db.urls.save({url: 'http://www.slideshare.net/ggoodale/getting-started-with-mongodb-and-nodejs'})
+> db.urls.save({username: 'me', url: 'http://www.mongodb.org/display/DOCS/Quickstart+OS+X', date: new Date()})
+> db.urls.save({username: 'I', url: 'http://www.slideshare.net/ggoodale/getting-started-with-mongodb-and-nodejs', date: new Date()})
 
 # start node.js server
 node server.js
