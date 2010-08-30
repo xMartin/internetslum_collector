@@ -131,7 +131,7 @@ function checkUrl(url, callback) {
   urlParts.host = urlPartsMatch[2] || ''
   urlParts.port = urlPartsMatch[3] ? urlPartsMatch[3].substr(1) : 80
   urlParts.path = urlPartsMatch[4] || '/'
-  checkedUrl = urlParts.protocol + urlParts.host + (urlParts.port != 80 ? ':' + urlParts.port : '') + urlParts.path
+  var checkedUrl = urlParts.protocol + urlParts.host + (urlParts.port != 80 ? ':' + urlParts.port : '') + urlParts.path
   var client = http.createClient(urlParts.port, urlParts.host)
   client.on('error', function (err) {
     callback(err, checkedUrl)
