@@ -10,6 +10,9 @@ sudo npm install mongodb
 # install node.js module for Mustache
 sudo npm install mustache
 
+# install node.js module for Express
+sudo npm install express
+
 # setup and start database
 mkdir /Users/martin/node.js/mongodb/internetslum_collector
 /opt/local/bin/mongod --dbpath=/Users/martin/node.js/mongodb/internetslum_collector
@@ -20,4 +23,4 @@ mongo internetslum_collector
 > db.urls.save({username: 'I', url: 'http://www.slideshare.net/ggoodale/getting-started-with-mongodb-and-nodejs', date: new Date()})
 
 # start node.js server
-node server.js
+node app.js
