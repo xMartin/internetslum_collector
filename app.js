@@ -42,9 +42,11 @@ app.get('/list', function(req, res) {
   url_collection.find({}, function(err, cursor) {
     cursor.fetchAllRecords(function(err, items) {
       items.forEach(function(item) {
-        item.formattedDate =
-          item.date.getDate() + '.' + item.date.getMonth() + '.' + item.date.getFullYear() + ', '
-          + item.date.getHours() + ':' + item.date.getMinutes()
+        if (item.date) {
+          item.formattedDate =
+            item.date.getDate() + '.' + item.date.getMonth() + '.' + item.date.getFullYear() + ', '
+            + item.date.getHours() + ':' + item.date.getMinutes()
+        }
       })
       res.render('list', { locals: { list: items }})
     })
