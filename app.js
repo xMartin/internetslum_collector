@@ -11,17 +11,6 @@ var port = process.argv[2] || 8080
 
 console.log('Starting server...')
 
-// load partial templates
-var partials = {}
-;['header', 'footer'].forEach(function(name) {
-  partials[name] = fs.readFileSync('./views/' + name + '.html', 'utf8')
-})
-// load templates
-var templates = {}
-;['index', 'list', 'add'].forEach(function(name) {
-  templates[name] = fs.readFileSync('./views/' + name + '.html', 'utf8')
-})
-
 // get collection "urls" from db
 // FIXME Opening the database and getting the collection works asynchronously so it may be requested before it is available.
 new mongodb.Db('internetslum_collector', new mongodb.Server('localhost', 27017, {}), {}).open(function(err, db) {
@@ -32,12 +21,21 @@ new mongodb.Db('internetslum_collector', new mongodb.Server('localhost', 27017, 
 
 var app = express.createServer();
 
+// register Mustache template engine
+app.register('.html', {
+  render: function(str, options) {
+    return mustache.to_html(str, options.locals, options.locals.partials)
+  }
+})
+// set .html as default suffix
+app.set('view engine', 'html');
+
 app.configure(function() {
   app.use(express.staticProvider(__dirname + '/public'))
 })
 
 app.get('/', function(req, res) {
-  res.send(mustache.to_html(templates['index'], {}, partials))
+  res.render('index')
 })
 
 app.get('/list', function(req, res) {
@@ -48,7 +46,7 @@ app.get('/list', function(req, res) {
           item.date.getDate() + '.' + item.date.getMonth() + '.' + item.date.getFullYear() + ', '
           + item.date.getHours() + ':' + item.date.getMinutes()
       })
-      res.send(mustache.to_html(templates['list'], { list: items }, partials))
+      res.render('list', { locals: { list: items }})
     })
   })
 })
@@ -83,7 +81,7 @@ app.get('/add', function(req, res) {
 
   function render(message) {
     templateTags.message = message || ''
-    res.send(mustache.to_html(templates['add'], templateTags, partials))
+    res.render('add', { locals: templateTags })
   }
 })
 
