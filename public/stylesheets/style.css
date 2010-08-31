@@ -48,3 +48,14 @@ nav ul li:last-child {
   border: 1px solid #a61;
   background: #d83;
 }
+
+time {
+  font-size: 82%;
+  font-style: italic;
+  color: #888;
+}
+
+.username {
+  font-size: 82%;
+  font-weight: bold;
+}
