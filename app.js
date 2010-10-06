@@ -44,7 +44,7 @@ app.get('/list', function(req, res) {
       items.forEach(function(item) {
         if (item.date) {
           item.formattedDate =
-            item.date.getDate() + '.' + item.date.getMonth() + '.' + item.date.getFullYear() + ', '
+            item.date.getDate() + '.' + (item.date.getMonth() + 1) + '.' + item.date.getFullYear() + ', '
             + item.date.getHours() + ':' + item.date.getMinutes()
         }
       })
